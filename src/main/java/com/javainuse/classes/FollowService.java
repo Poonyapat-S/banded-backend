@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,4 +80,42 @@ public class FollowService {
 		return topics;
 	}
 	
+	/* -=- ACCOUNT DELETION METHODS -=- */
+	public void deleteUsersUserFollows(User user) {
+		List<UserFollower> allUserFollowerObjects = new ArrayList<>();
+		
+		//grabbing all UserFollower objects with this user associated, whether followed or following
+		try {
+			allUserFollowerObjects = userFollowerRepository.findByFollowingIDOrFollowedID(user.getUserID(), user.getUserID());
+		} catch (Exception e) {
+			System.out.println("ERROR retrieving UserFollower objects in FollowService.deleteUsersUserFollows");
+		}
+		
+		int totalFollowings = 0;
+		int totalFollowers = 0;
+		for (UserFollower uf : allUserFollowerObjects) {
+			if (Objects.equals(uf.getFollowingID(), user.getUserID())) totalFollowings++;
+			else totalFollowers++;
+			userFollowerRepository.delete(uf);
+		}
+		System.out.println("["+totalFollowings+"] total UserFollower objects (following) deleted for ["+user.getUsername()+"]");
+		System.out.println("["+totalFollowers+"] total UserFollower objects (followed) deleted for ["+user.getUsername()+"]");
+	}
+	
+	public void deleteUsersTopicFollows(User user) {
+		List<TopicFollower> allTopicFollows = new ArrayList<>();
+		
+		//grabbing all UserFollower objects with this user associated, whether followed or following
+		try {
+			allTopicFollows = topicFollowerRepository.findByUserID(user.getUserID());
+		} catch (Exception e) {
+			System.out.println("ERROR retrieving TopicFollower objects in FollowService.deleteUsersTopicFollows");
+		}
+		
+		int totalFollows = allTopicFollows.size();
+		for (TopicFollower tf : allTopicFollows) {
+			topicFollowerRepository.delete(tf);
+		}
+		System.out.println("["+totalFollows+"] total topic follows deleted for ["+user.getUsername()+"]");
+	}
 }

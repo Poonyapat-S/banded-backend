@@ -12,6 +12,8 @@ public interface UserFollowerRepository extends JpaRepository<UserFollower,Integ
 	List<UserFollower> findByFollowingID(Integer followingID); //given id of user, returns userfollower objects with ids of the people they follow
 	List<UserFollower> findByFollowedID(Integer followedID); //given id of user, returns userfollower objects with ids of people that follow them
 	
+	List<UserFollower> findByFollowingIDOrFollowedID(Integer followingID, Integer followedID);
+	
 	Optional<UserFollower> findByFollowingUserAndFollowedUser(User followingUser, User followedUser);
 	
 	boolean existsByFollowingIDAndFollowedID(Integer followingID, Integer followedID);
