@@ -96,6 +96,9 @@ public class User implements UserDetails {
     //based on what we need from the registration method
     
     @Transient
+    private boolean isBlocked;
+    
+    @Transient
     private String profilePicLink;
     
     @PostLoad
@@ -113,9 +116,6 @@ public class User implements UserDetails {
             profilePicLink = "https://www.learnreligions.com/thmb/ItEkoS8widSPJlMvrwRf6LPJuKg=/3744x3744/smart/filters:no_upscale()/big-tortoise-185095684-58a888f43df78c345bfd0690.jpg";
         }
     }
-    
-
-    private boolean isBlocked;
 
 
     public User(String name, String userName, String password, String email, String bio, String favBand,
