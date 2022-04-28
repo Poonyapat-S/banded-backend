@@ -99,6 +99,7 @@ public class PostController {
         try {
            Topic foundTopic = topicRepository.findByTopicID(topicID).orElseThrow(() -> new Exception());
            List<Post> postList = postRepository.findByTopic(foundTopic);
+           postService.removeBlock(postList,user);
            postList = postService.anonymizeName(postList);
            postService.sortByDateTimeDesc(postList);
            postService.removeDup(postList);
