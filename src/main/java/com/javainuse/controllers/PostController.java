@@ -177,5 +177,19 @@ public class PostController {
             return null;
         }
     }
+
+    @GetMapping(path="/targetTimeline")
+    public List<Post> getTargetTimeline(@RequestParam String username){
+        try
+        {
+            User user = userRepository.findByUserName(username).orElseThrow(() -> new Exception());
+            List<Post> toReturn = postRepository.findByUserAndIsAnonFalse(user);
+            postService.sortByDateTimeDesc(toReturn);
+            return toReturn;
+        }catch (Exception e){
+            System.out.println("User doesnt exist?");
+            return new ArrayList<Post>();
+        }
+    }
 }
 
