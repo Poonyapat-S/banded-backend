@@ -116,7 +116,7 @@ public class PostController {
 
     @GetMapping(path = "/timeline")
     public List<Post> genUserTimeline(@AuthenticationPrincipal User user, @RequestParam int count){
-      List<User> followedUsers = followService.retrieveFollowedUsers(user.getUserID());
+        List<User> followedUsers = followService.retrieveFollowedUsers(user.getUserID());
         List<Topic> followedTopics = followService.retrieveFollowedTopics(user.getUserID());
         List<Post> allPosts = new ArrayList<Post>();
         for(int i = 0; i < followedUsers.size(); i++){

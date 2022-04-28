@@ -1,8 +1,7 @@
 package com.javainuse.controllers;
 
-import com.javainuse.classes.DummyUser;
-import com.javainuse.classes.User;
-import com.javainuse.classes.UserRepository;
+import com.javainuse.classes.*;
+import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,11 +15,16 @@ import org.springframework.web.servlet.function.EntityResponse;
 import java.util.Objects;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping(path = "/profile")
 public class ProfileController {
 
     @Autowired
     private UserRepository userRepository;
+    private PostService postService;
+    private PostInteractionService postInteractionService;
+    private FollowService followService;
+    private BlockService blockService;
 
     @GetMapping
     public DummyUser getCurrentProfile(@AuthenticationPrincipal User user) {
@@ -57,6 +61,12 @@ public class ProfileController {
         if(!Objects.equals(user.getUsername(), userName)) {
             return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
         }
+        postInteractionService.deleteUsersReactions(user);
+        postInteractionService.deleteUsersSavedPosts(user);
+        followService.deleteUsersUserFollows(user);
+        followService.deleteUsersTopicFollows(user);
+        blockService.deleteUsersBlocks(user);
+        postService.deleteUsersPosts(user);
         userRepository.delete(user);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
