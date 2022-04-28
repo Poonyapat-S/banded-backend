@@ -115,6 +115,9 @@ public class User implements UserDetails {
     }
     
 
+    private boolean isBlocked;
+
+
     public User(String name, String userName, String password, String email, String bio, String favBand,
                 String favSong, UserAuthorities userAuthorities, Boolean locked, Boolean enabled) {
         this.name = name;

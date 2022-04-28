@@ -1,5 +1,6 @@
 package com.javainuse.controllers;
 
+import com.javainuse.classes.BlockService;
 import com.javainuse.classes.DummyUser;
 import com.javainuse.classes.User;
 import com.javainuse.classes.UserRepository;
@@ -31,6 +32,7 @@ public class ProfileController {
     private StrengthCheck strengthCheck;
     private PasswordEncoder passwordEncoder;
     private EmailValidator emailValidator;
+    private BlockService blockService;
 
     @GetMapping
     public User getCurrentProfile(@AuthenticationPrincipal User user) {
@@ -39,7 +41,14 @@ public class ProfileController {
 
     @GetMapping(path="/{username}")
     public User getProfile(@AuthenticationPrincipal User user, @PathVariable String username) {
-        return userRepository.findByUserName(username).orElse(null);
+        try {
+            User viewedUser = userRepository.findByUserName(username).orElseThrow();
+            viewedUser.setBlocked(blockService.blockExists(user.getUserID(), viewedUser.getUserID()));
+            return viewedUser;
+        } catch (Exception e) {
+            System.out.println("ERROR retrieving User in ProfileController");
+            return null;
+        }
     }
 
     @PutMapping(path="/editbio/{username}")
