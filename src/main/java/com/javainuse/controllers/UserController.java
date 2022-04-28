@@ -55,7 +55,7 @@ public class UserController {
         return userService.viewOther(username);
     }
     
-    @PostMapping(path = "setprofpic")
+    @PostMapping(path = "/setprofpic")
     public void setProfilePicture(@AuthenticationPrincipal User user, Integer selection) {
         try {
             User userObj = userRepository.findByUserName(user.getUsername()).orElseThrow();
@@ -66,7 +66,7 @@ public class UserController {
         }
     }
     
-    @GetMapping(path = "getprofpic")
+    @GetMapping(path = "/getprofpic")
     public String getProfilePictureLink(@AuthenticationPrincipal User user) {
         //default to dolphin profile pic
         String profPicLink = "https://today.duke.edu/sites/default/files/styles/story_hero/public/Dolphin%20Research%20Center_Louie.jpeg?itok=wo4vavnx";
