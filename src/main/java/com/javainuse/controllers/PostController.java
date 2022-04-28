@@ -99,6 +99,7 @@ public class PostController {
         try {
            Topic foundTopic = topicRepository.findByTopicID(topicID).orElseThrow(() -> new Exception());
            List<Post> postList = postRepository.findByTopic(foundTopic);
+           postService.removeBlock(postList,user);
            postList = postService.anonymizeName(postList);
            postService.sortByDateTimeDesc(postList);
            postService.removeDup(postList);
@@ -128,7 +129,7 @@ public class PostController {
         allPosts.addAll(postService.anonymizeName(postRepository.findByUser(user)));
         postService.sortByDateTimeDesc(allPosts);
         List<Post> noDup = postService.removeDup(allPosts);
-
+        postService.removeBlock(noDup,user);
         List<Post> toReturn = new ArrayList<Post>();
         int i = count;
         System.out.println(i);
@@ -177,16 +178,38 @@ public class PostController {
             return null;
         }
     }
-    
+
+    @GetMapping(path="/targetTimeline")
+    public List<Post> getTargetTimeline(@RequestParam String username){
+        try
+        {
+            User user = userRepository.findByUserName(username).orElseThrow(() -> new Exception());
+            List<Post> toReturn = postRepository.findByUserAndIsAnonFalse(user);
+            postService.sortByDateTimeDesc(toReturn);
+            return toReturn;
+        }catch (Exception e){
+            System.out.println("User doesnt exist?");
+            return new ArrayList<Post>();
+        }
+    }
+
+    @GetMapping(path="/getComments")
+    public List<Post> getComments(@RequestParam int postId){
+        List<Post> toReturn = postRepository.findByParentPostID(postId);
+        postService.sortByDateTimeDesc(toReturn);
+        toReturn = postService.anonymizeName(toReturn);
+        return toReturn;
+    }
+
     @PostMapping(path = "/delete")
     public String deletePost(@AuthenticationPrincipal User user, @RequestBody Integer postID) {
         try {
             Post delPost = postRepository.findById(postID).orElseThrow(Exception::new);
-            
+
             if (user != delPost.getUser()) {
                 return "This User does not have authorization to delete this Post";
             }
-            
+
             return postService.deletePost(postID);
         }
         catch (Exception e){

@@ -54,6 +54,29 @@ public class UserController {
     public String viewProfile(@RequestParam String username){
         return userService.viewOther(username);
     }
-
-
+    
+    @PostMapping(path = "setprofpic")
+    public void setProfilePicture(@AuthenticationPrincipal User user, Integer selection) {
+        try {
+            User userObj = userRepository.findByUserName(user.getUsername()).orElseThrow();
+            userObj.setProfilePicSelection(selection);
+            userRepository.save(userObj);
+        } catch (Exception e) {
+            System.out.println("FAILURE when setting profile picture");
+        }
+    }
+    
+    @GetMapping(path = "getprofpic")
+    public String getProfilePictureLink(@AuthenticationPrincipal User user) {
+        //default to dolphin profile pic
+        String profPicLink = "https://today.duke.edu/sites/default/files/styles/story_hero/public/Dolphin%20Research%20Center_Louie.jpeg?itok=wo4vavnx";
+        try {
+            User userObj = userRepository.findByUserName(user.getUsername()).orElseThrow();
+            profPicLink = userObj.getProfilePicLink();
+        } catch (Exception e) {
+            System.out.print("ERROR when retrieving profile picture link");
+        }
+        
+        return profPicLink;
+    }
 }

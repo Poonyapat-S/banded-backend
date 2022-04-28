@@ -56,4 +56,21 @@ public class DirectMessageController {
 		
 		return conversations;
 	}
+
+	@GetMapping(path = "/message/{userID}")
+	public Conversation getMessagesWith(@AuthenticationPrincipal User currUser, @PathVariable Integer userID) {
+		User recipient = userRepository.findById(userID).orElse(null);
+
+		if(recipient == null) {
+			return new Conversation(null, null, new ArrayList<>(), null);
+		}
+		System.out.println("Get Conversation for "+currUser.getUsername()+" and "+recipient.getUsername());
+		List<DirectMessage> dms1 = dmRepository.findBySenderAndRecipient(currUser, recipient);
+		dms1.addAll(dmRepository.findBySenderAndRecipient(recipient, currUser));
+		dmService.organizeByDirectMessageTimes(dms1);
+		if(dms1.size() > 0) {
+			return new Conversation(currUser, recipient, dms1, dms1.get(0).getTimeSent());
+		}
+		return new Conversation(null, null, new ArrayList<>(), null);
+	}
 }
