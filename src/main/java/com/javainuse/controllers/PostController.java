@@ -178,8 +178,8 @@ public class PostController {
         }
     }
     
-    @PostMapping(path = "/delete/{postID}")
-    public String deletePost(@AuthenticationPrincipal User user, @PathVariable Integer postID) {
+    @PostMapping(path = "/delete")
+    public String deletePost(@AuthenticationPrincipal User user, @RequestBody Integer postID) {
         try {
             Post delPost = postRepository.findById(postID).orElseThrow(Exception::new);
             
