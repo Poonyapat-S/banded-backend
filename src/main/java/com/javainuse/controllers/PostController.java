@@ -117,7 +117,7 @@ public class PostController {
 
     @GetMapping(path = "/timeline")
     public List<Post> genUserTimeline(@AuthenticationPrincipal User user, @RequestParam int count){
-      List<User> followedUsers = followService.retrieveFollowedUsers(user.getUserID());
+        List<User> followedUsers = followService.retrieveFollowedUsers(user.getUserID());
         List<Topic> followedTopics = followService.retrieveFollowedTopics(user.getUserID());
         List<Post> allPosts = new ArrayList<Post>();
         for(int i = 0; i < followedUsers.size(); i++){
@@ -201,8 +201,8 @@ public class PostController {
         return toReturn;
     }
 
-    @PostMapping(path = "/delete/{postID}")
-    public String deletePost(@AuthenticationPrincipal User user, @PathVariable Integer postID) {
+    @PostMapping(path = "/delete")
+    public String deletePost(@AuthenticationPrincipal User user, @RequestBody Integer postID) {
         try {
             Post delPost = postRepository.findById(postID).orElseThrow(Exception::new);
 

@@ -1,5 +1,6 @@
 package com.javainuse.controllers;
 
+import com.javainuse.classes.*;
 import com.javainuse.classes.BlockService;
 import com.javainuse.classes.DummyUser;
 import com.javainuse.classes.User;
@@ -29,6 +30,9 @@ public class ProfileController {
 
     @Autowired
     private UserRepository userRepository;
+    private PostService postService;
+    private PostInteractionService postInteractionService;
+    private FollowService followService;
     private StrengthCheck strengthCheck;
     private PasswordEncoder passwordEncoder;
     private EmailValidator emailValidator;
@@ -73,6 +77,12 @@ public class ProfileController {
         if(!Objects.equals(user.getUsername(), userName)) {
             return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
         }
+        postInteractionService.deleteUsersReactions(user);
+        postInteractionService.deleteUsersSavedPosts(user);
+        followService.deleteUsersUserFollows(user);
+        followService.deleteUsersTopicFollows(user);
+        blockService.deleteUsersBlocks(user);
+        postService.deleteUsersPosts(user);
         userRepository.delete(user);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
