@@ -56,7 +56,7 @@ public class UserController {
     }
     
     @PostMapping(path = "/setprofpic")
-    public void setProfilePicture(@AuthenticationPrincipal User user, Integer selection) {
+    public void setProfilePicture(@AuthenticationPrincipal User user, @RequestBody Integer selection) {
         try {
             User userObj = userRepository.findByUserName(user.getUsername()).orElseThrow();
             userObj.setProfilePicSelection(selection);
