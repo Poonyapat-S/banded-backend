@@ -118,7 +118,7 @@ public class ProfileController {
         } catch(UsernameNotFoundException e){
             user.setEmail(newEmail);
             userRepository.save(user);
-            return new ResponseEntity("Username successfully changed",HttpStatus.OK);
+            return new ResponseEntity("Email successfully changed",HttpStatus.OK);
         }
     }
 }
