@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.sql.Types.NULL;
+
 @Service
 @AllArgsConstructor
 public class PostService {
@@ -123,7 +125,6 @@ public class PostService {
         }
     }
     
-    //DON'T USE THIS METHOD OUTSIDE deleteUsersPosts, there are specific fail-safes in place here that would mess with standard post deletion
     public void deletePost(Post post) {
         long replyCount = postRepository.countByParentPostID(post.getPostID());
         if (replyCount > 0) {
@@ -132,13 +133,14 @@ public class PostService {
             try {
                 replies = postRepository.findByParentPostID(post.getPostID());
             } catch (Exception e) {
-                System.out.println("ERROR retrieving replies via PostService.deleteUsersPosts.deletePost");
+                System.out.println("ERROR retrieving replies via PostService.deletePost");
             }
             
             for (Post rep : replies) {
-                if (rep.getUser() != post.getUser()) {
+                /*if (rep.getUser() != post.getUser()) {
                     deletePost(rep);
-                }
+                }*/
+                deletePost(rep);
             }
         }
         

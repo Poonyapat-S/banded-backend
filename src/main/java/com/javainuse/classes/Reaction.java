@@ -41,9 +41,16 @@ public class Reaction {
 	public Reaction(Post post, User user) {
 		this.post = post;
 		this.user = user;
+		this.reactionTime = LocalDateTime.now();
+	}
+	public Reaction(Post post, User user, LocalDateTime reactionTime) {
+		this.post = post;
+		this.user = user;
+		this.reactionTime = reactionTime;
 	}
 	public Reaction(Integer postID, Integer userID) {
 		this.postID = postID;
 		this.userID = userID;
+		this.reactionTime = LocalDateTime.now();
 	}
 }
