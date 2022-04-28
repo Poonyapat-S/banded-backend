@@ -50,6 +50,7 @@ public class ProfileController {
             viewedUser.setBlocked(blockService.blockExists(user.getUserID(), viewedUser.getUserID()));
             return viewedUser;
         } catch (Exception e) {
+            System.out.println("Exception: "+e);
             System.out.println("ERROR retrieving User in ProfileController");
             return null;
         }
@@ -87,7 +88,7 @@ public class ProfileController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @PostMapping(path="/changeUsername")
+    @PostMapping(path="/changeUsername/{newUsername}")
     public ResponseEntity<String> changeUsername(@AuthenticationPrincipal User user,@PathVariable String newUsername){
         try {
             userRepository.findByUserName(newUsername).orElseThrow(() -> new UsernameNotFoundException(String.format("", "")));
@@ -100,7 +101,7 @@ public class ProfileController {
     }
 
     @PostMapping(path="/changePassword")
-    public ResponseEntity<String> changePassword(@AuthenticationPrincipal User user,@RequestParam String newPassword){
+    public ResponseEntity<String> changePassword(@AuthenticationPrincipal User user,@RequestBody String newPassword){
         try{
             String flags = strengthCheck.checkPassword(newPassword);
             if (flags.length() > 0) return ResponseEntity.status(HttpStatus.CONFLICT).body(flags);
@@ -118,7 +119,8 @@ public class ProfileController {
     }
 
     @PostMapping(path="/changeEmail")
-    public ResponseEntity<String> changeEmail(@AuthenticationPrincipal User user,@RequestParam String newEmail){
+    public ResponseEntity<String> changeEmail(@AuthenticationPrincipal User user,@RequestBody String newEmail){
+        System.out.println("Change Email Called: "+newEmail);
         if(!emailValidator.validateEmail(newEmail)){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Invalid Email");
         }
