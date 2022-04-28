@@ -15,6 +15,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findByParentPostID(Integer parentPostID);
     long countByParentPostID(Integer parentPostID);
     Optional<Post> findByPostID(Integer postID);
-    List<Post> findByParentPostID(Integer postID);
     List<Post> findAll();
 }
