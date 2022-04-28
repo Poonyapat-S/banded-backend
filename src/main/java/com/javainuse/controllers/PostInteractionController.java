@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -41,7 +42,7 @@ public class PostInteractionController {
 		}
 		
 		//create and store new Reaction object
-		Reaction newLike = new Reaction(likedPost, currUser);
+		Reaction newLike = new Reaction(likedPost, currUser, LocalDateTime.now());
 		reactionRepository.save(newLike);
 		System.out.println(currUser.getUsername() + " (userID:" + currUser.getUserID() + ") liked Post with postID ["
 				+ postID + "]");
@@ -102,8 +103,8 @@ public class PostInteractionController {
 					" has already liked Post with postID [" + postID + "]");
 		}
 		
-		//create and store new Reaction object
-		SavedPost newSave = new SavedPost(savedPost, currUser);
+		//create and store new SavedPost object
+		SavedPost newSave = new SavedPost(savedPost, currUser, LocalDateTime.now());
 		savedPostRepository.save(newSave);
 		System.out.println(currUser.getUsername() + " (userID:" + currUser.getUserID() + ") saved Post with postID ["
 				+ postID + "]");

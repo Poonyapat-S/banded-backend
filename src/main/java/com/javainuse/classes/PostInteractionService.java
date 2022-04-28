@@ -126,4 +126,71 @@ public class PostInteractionService {
 		
 		return interactions;
 	}
+	
+	/* -=- Post deletion methods */
+	public void deletePostsReactions(Post post) {
+		long likeCount = reactionRepository.countByPostID(post.getPostID());
+		if (likeCount > 0) {
+			List<Reaction> likes = new ArrayList<>();
+			try {
+				likes = reactionRepository.findByPostID(post.getPostID());
+			} catch (Exception e) {
+				System.out.println("ERROR attempting to retrieve likes from Post with postID ["+post.getPostID()+"]");
+			}
+			
+			for (Reaction r : likes) {
+				reactionRepository.delete(r);
+			}
+		}
+	}
+	
+	public void deletePostsSaves(Post post) {
+		long saveCount = savedPostRepository.countByPostID(post.getPostID());
+		if (saveCount > 0) {
+			List<SavedPost> saves = new ArrayList<>();
+			try {
+				saves = savedPostRepository.findByPostID(post.getPostID());
+			} catch (Exception e) {
+				System.out.println("ERROR attempting to retrieve likes from Post with postID ["+post.getPostID()+"]");
+			}
+			
+			for (SavedPost sp : saves) {
+				savedPostRepository.delete(sp);
+			}
+		}
+	}
+	
+	
+	/* -=- ACCOUNT DELETION METHODS -=- */
+	public void deleteUsersReactions(User user) {
+		List<Reaction> allReactions = new ArrayList<>();
+		
+		try {
+			allReactions = reactionRepository.findByUserID(user.getUserID());
+		} catch (Exception e) {
+			System.out.println("ERROR retrieving Reactions in PostInteractionService.deleteUsersReactions");
+		}
+		
+		int totalLikes = allReactions.size();
+		for (Reaction r : allReactions) {
+			reactionRepository.delete(r);
+		}
+		System.out.println("["+totalLikes+"] total likes deleted for ["+user.getUsername()+"]");
+	}
+	
+	public void deleteUsersSavedPosts(User user) {
+		List<SavedPost> allSavedPosts = new ArrayList<>();
+		
+		try {
+			allSavedPosts = savedPostRepository.findByUserID(user.getUserID());
+		} catch (Exception e) {
+			System.out.println("ERROR retrieving SavedPosts in PostInteractionService.deleteUsersReactions");
+		}
+		
+		int totalSaves = allSavedPosts.size();
+		for (SavedPost sp : allSavedPosts) {
+			savedPostRepository.delete(sp);
+		}
+		System.out.println("["+totalSaves+"] total SavedPost objects deleted for ["+user.getUsername()+"]");
+	}
 }
