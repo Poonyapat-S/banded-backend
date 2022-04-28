@@ -48,6 +48,9 @@ public class User implements UserDetails {
 
     @Column(name="fav_song")
     private String favSong;
+    
+    @Column(name="profilePic")
+    private int profilePicSelection;
 
     @JsonIgnore
     @Column(name="locked_until")
@@ -93,7 +96,27 @@ public class User implements UserDetails {
     //based on what we need from the registration method
     
     @Transient
+    private String profilePicLink;
+    
+    @PostLoad
+    public void setProfilePicLink() {
+        //default to dolphin prof pic
+        profilePicLink = "https://today.duke.edu/sites/default/files/styles/story_hero/public/Dolphin%20Research%20Center_Louie.jpeg?itok=wo4vavnx";
+        if (profilePicSelection == 2) {
+            //giraffe prof pic
+            profilePicLink = "https://kubrick.htvapps.com/htv-prod-media.s3.amazonaws.com/images/baby-giraffe-2-1605021557.jpg?crop=1.00xw:1.00xh;0,0&resize=640:*";
+        } else if (profilePicSelection == 3) {
+            //lion prof pic
+            profilePicLink = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIWRGfspKQD2OFuHoRM1240tJfAjNObkelBA&usqp=CAU";
+        } else if (profilePicSelection == 4) {
+            //tortoise prof pic
+            profilePicLink = "https://www.learnreligions.com/thmb/ItEkoS8widSPJlMvrwRf6LPJuKg=/3744x3744/smart/filters:no_upscale()/big-tortoise-185095684-58a888f43df78c345bfd0690.jpg";
+        }
+    }
+    
+
     private boolean isBlocked;
+
 
     public User(String name, String userName, String password, String email, String bio, String favBand,
                 String favSong, UserAuthorities userAuthorities, Boolean locked, Boolean enabled) {
