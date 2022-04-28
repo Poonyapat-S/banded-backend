@@ -41,9 +41,16 @@ public class SavedPost {
 	public SavedPost (Post post, User user) {
 		this.post = post;
 		this.user = user;
+		this.savedTime = LocalDateTime.now();
+	}
+	public SavedPost (Post post, User user, LocalDateTime savedTime) {
+		this.post = post;
+		this.user = user;
+		this.savedTime = savedTime;
 	}
 	public SavedPost(Integer postID, Integer userID) {
 		this.postID = postID;
 		this.userID = userID;
+		this.savedTime = LocalDateTime.now();
 	}
 }

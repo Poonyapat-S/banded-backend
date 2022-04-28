@@ -10,4 +10,5 @@ public interface DirectMessageRepository extends JpaRepository<DirectMessage, In
 	List<DirectMessage> findBySender(User sender);
 	List<DirectMessage> findByRecipient(User recipient);
 	List<DirectMessage> findBySenderOrRecipient(User sender, User recipient);
+	List<DirectMessage> findBySenderAndRecipient(User sender, User recipient);
 }

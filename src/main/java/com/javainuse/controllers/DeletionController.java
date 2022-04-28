@@ -1,7 +1,6 @@
 package com.javainuse.controllers;
 
-import com.javainuse.classes.User;
-import com.javainuse.classes.UserService;
+import com.javainuse.classes.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,9 +18,20 @@ public class DeletionController
 {
     @Autowired
     private UserService userService;
+    private PostService postService;
+    private PostInteractionService postInteractionService;
+    private FollowService followService;
+    private BlockService blockService;
 
     @PostMapping
     public String deleteUser(@AuthenticationPrincipal User user) {
+        postInteractionService.deleteUsersReactions(user);
+        postInteractionService.deleteUsersSavedPosts(user);
+        followService.deleteUsersUserFollows(user);
+        followService.deleteUsersTopicFollows(user);
+        blockService.deleteUsersBlocks(user);
+        postService.deleteUsersPosts(user);
+        
         return userService.deleteByEmail(user.getEmail());
     }
 }

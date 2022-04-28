@@ -10,8 +10,11 @@ import java.util.Optional;
 public interface SavedPostRepository extends JpaRepository<SavedPost,Integer> {
 	List<SavedPost> findByUserID(Integer userID);
 	List<SavedPost> findByUser(User user);
+	List<SavedPost> findByPostID(Integer postID);
 	
 	Optional<SavedPost> findByPostAndUser(Post post, User user);
+	
+	long countByPostID(Integer postID);
 	
 	boolean existsByPostAndUser(Post post, User user);
 	boolean existsByUserAndPostID(User user, Integer postID);
