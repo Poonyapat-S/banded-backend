@@ -191,5 +191,13 @@ public class PostController {
             return new ArrayList<Post>();
         }
     }
+
+    @GetMapping(path="/getComments")
+    public List<Post> getComments(@RequestParam int postId){
+        List<Post> toReturn = postRepository.findByPostIDAndParentPostIDIsNotNull(postId);
+        postService.sortByDateTimeDesc(toReturn);
+        toReturn = postService.anonymizeName(toReturn);
+        return toReturn;
+    }
 }
 
