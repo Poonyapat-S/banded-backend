@@ -128,7 +128,7 @@ public class PostController {
         allPosts.addAll(postService.anonymizeName(postRepository.findByUser(user)));
         postService.sortByDateTimeDesc(allPosts);
         List<Post> noDup = postService.removeDup(allPosts);
-
+        postService.removeBlock(noDup,user);
         List<Post> toReturn = new ArrayList<Post>();
         int i = count;
         System.out.println(i);

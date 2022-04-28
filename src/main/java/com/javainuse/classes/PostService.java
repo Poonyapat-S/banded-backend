@@ -20,6 +20,9 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BlockService blockService;
+
     public List<Post> loadByUsername(String username) {
         List<Post> posts = new ArrayList<>();
         try {
@@ -71,5 +74,25 @@ public class PostService {
 
     public List<Post> removeDup(List<Post> allPosts) {
         return allPosts.stream().distinct().collect(Collectors.toList());
+    }
+
+    public List<Post> removeReplies(List<Post> posts){
+        ListIterator<Post> iter = posts.listIterator();
+        while(iter.hasNext()){
+            if(iter.next().getParentPostID() != null){
+                iter.remove();
+            }
+        }
+        return posts;
+    }
+
+    public List<Post> removeBlock(List<Post> posts, User generator){
+        ListIterator<Post> iter = posts.listIterator();
+        while(iter.hasNext()){
+            if(blockService.blockExists(generator.getUserID(), iter.next().getUserID())){
+                iter.remove();
+            }
+        }
+        return posts;
     }
 }
