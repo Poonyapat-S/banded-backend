@@ -206,9 +206,9 @@ public class PostController {
         try {
             Post delPost = postRepository.findById(postID).orElseThrow(Exception::new);
 
-            if (user != delPost.getUser()) {
+            /*if (user != delPost.getUser()) {
                 return "This User does not have authorization to delete this Post";
-            }
+            }*/
 
             return postService.deletePost(postID);
         }
