@@ -194,7 +194,7 @@ public class PostController {
 
     @GetMapping(path="/getComments")
     public List<Post> getComments(@RequestParam int postId){
-        List<Post> toReturn = postRepository.findByPostIDAndParentPostIDIsNotNull(postId);
+        List<Post> toReturn = postRepository.findByParentPostID(postId);
         postService.sortByDateTimeDesc(toReturn);
         toReturn = postService.anonymizeName(toReturn);
         return toReturn;

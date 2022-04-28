@@ -13,6 +13,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findByTopic(Topic topic);
     List<Post> findByUserAndParentPostIDIsNotNull(User user);
     Optional<Post> findByPostID(Integer postID);
-    List<Post> findByPostIDAndParentPostIDIsNotNull(Integer postID);
+    List<Post> findByParentPostID(Integer postID);
     List<Post> findAll();
 }
