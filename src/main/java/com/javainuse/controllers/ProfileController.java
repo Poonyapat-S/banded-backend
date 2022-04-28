@@ -33,16 +33,13 @@ public class ProfileController {
     private EmailValidator emailValidator;
 
     @GetMapping
-    public DummyUser getCurrentProfile(@AuthenticationPrincipal User user) {
-        System.out.println("Got called");
-        DummyUser currUser = new DummyUser(user);
-        System.out.println(currUser.getName());
-        return currUser;
+    public User getCurrentProfile(@AuthenticationPrincipal User user) {
+        return user;
     }
 
     @GetMapping(path="/{username}")
-    public DummyUser getProfile(@AuthenticationPrincipal User user, @PathVariable String username) {
-        return new DummyUser(userRepository.findByUserName(username).orElse(null));
+    public User getProfile(@AuthenticationPrincipal User user, @PathVariable String username) {
+        return userRepository.findByUserName(username).orElse(null);
     }
 
     @PutMapping(path="/editbio/{username}")
