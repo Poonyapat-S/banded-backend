@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -70,5 +71,23 @@ public class BlockService {
 			}
 		}
 		return users;
+	}
+	
+	/* -=- ACCOUNT DELETION METHOD -=- */
+	public void deleteUsersBlocks(User user) {
+		List<Block> allBlocks = new ArrayList<>();
+		
+		//grabbing all UserFollower objects with this user associated, whether followed or following
+		try {
+			allBlocks = blockRepository.findByBlockingIDOrBlockedID(user.getUserID(), user.getUserID());
+		} catch (Exception e) {
+			System.out.println("ERROR retrieving Blocks in BlockService.deleteUsersBlocks");
+		}
+		
+		int totalBlocks = allBlocks.size();
+		for (Block b : allBlocks) {
+			blockRepository.delete(b);
+		}
+		System.out.println("["+totalBlocks+"] total Block objects deleted for ["+user.getUsername()+"]");
 	}
 }

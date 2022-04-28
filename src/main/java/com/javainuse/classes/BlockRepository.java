@@ -11,6 +11,7 @@ public interface BlockRepository extends JpaRepository<Block,Integer> {
 	Optional<Block> findByBlockingUserAndBlockedUser(User blockingUser, User blockedUser);
 	List<Block> findByBlockingID(Integer blockingID);
 	List<Block> findByBlockedID(Integer blockedID);
+	List<Block> findByBlockingIDOrBlockedID(Integer blockingID, Integer blockedID);
 	
 	boolean existsByBlockingUserAndBlockedUser(User blockingUser, User blockedUser);
 	boolean existsByBlockingIDAndBlockedID(Integer blockingID, Integer blockedID);

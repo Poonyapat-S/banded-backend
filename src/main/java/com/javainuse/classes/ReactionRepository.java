@@ -9,6 +9,7 @@ import java.util.Optional;
 @Repository
 public interface ReactionRepository extends JpaRepository<Reaction,Integer> {
 	List<Reaction> findByUserID(Integer userID);
+	List<Reaction> findByPostID(Integer postID);
 	Optional<Reaction> findByPostAndUser(Post post, User user);
 	long countByPostID(Integer postID);
 	boolean existsByPostAndUser(Post post, User user);

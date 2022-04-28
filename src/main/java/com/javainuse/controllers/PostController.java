@@ -177,5 +177,21 @@ public class PostController {
             return null;
         }
     }
+    
+    @PostMapping(path = "/delete/{postID}")
+    public String deletePost(@AuthenticationPrincipal User user, @PathVariable Integer postID) {
+        try {
+            Post delPost = postRepository.findById(postID).orElseThrow(Exception::new);
+            
+            if (user != delPost.getUser()) {
+                return "This User does not have authorization to delete this Post";
+            }
+            
+            return postService.deletePost(postID);
+        }
+        catch (Exception e){
+            return "Post deletion failure: Post retrieval error";
+        }
+    }
 }
 
