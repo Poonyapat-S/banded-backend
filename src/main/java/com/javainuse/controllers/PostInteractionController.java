@@ -146,8 +146,8 @@ public class PostInteractionController {
 		return savedPostRepository.existsByUserAndPostID(currUser, postID);
 	}
 	
-	@GetMapping(path = "/getpostinteractions/{userID}")
-	public List<Post> getPostInteractions(@PathVariable Integer userID) {
-		return postInteractionService.retrieveUserPostInteractions(userID);
+	@GetMapping(path = "/getpostinteractions/{userName}")
+	public List<Post> getPostInteractions(@PathVariable String userName) {
+		return postInteractionService.retrieveUserPostInteractions(userName);
 	}
 }

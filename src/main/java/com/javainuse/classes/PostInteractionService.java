@@ -1,6 +1,7 @@
 package com.javainuse.classes;
 
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,22 +22,22 @@ public class PostInteractionService {
 	@Autowired
 	private PostRepository postRepository;
 	
-	public List<Post> retrieveUserPostInteractions(Integer userID) {
+	public List<Post> retrieveUserPostInteractions(String userName) {
 		List<Reaction> likedPosts;
 		List<Post> replies;
 		List<SavedPost> savedPosts;
 		List<Post> recentInteractions = new ArrayList<>();
 		User user;
 		try {
-			user = userRepository.findByUserID(userID).orElseThrow();
+			user = userRepository.findByUserName(userName).orElseThrow();
 		} catch (Exception e) {
-			System.out.println("ERROR retrieving user in PostInteractionService with userID: ["+userID+"]");
+			System.out.println("ERROR retrieving user in PostInteractionService with userID: ["+userName+"]");
 			return recentInteractions;
 		}
 		
 		//retrieve all Reaction objects (liked posts) for given user
 		try {
-			likedPosts = reactionRepository.findByUserID(userID);
+			likedPosts = reactionRepository.findByUserID(user.getUserID());
 		} catch (Exception e) {
 			System.out.println("ERROR retrieving liked posts from User [" + user.getUsername() + "]");
 			likedPosts  = new ArrayList<>();
@@ -61,7 +62,7 @@ public class PostInteractionService {
 		if (likedPosts.size() > 0) {
 			for (Reaction lp : likedPosts) {
 				try {
-					Post p = lp.getPost();
+					Post p = (Post) Hibernate.unproxy(lp.getPost());
 					p.setInteractionType("Liked");
 					p.setInteractionTime(lp.getReactionTime());
 					recentInteractions.add(p);
@@ -73,7 +74,7 @@ public class PostInteractionService {
 		if (replies.size() > 0) {
 			for (Post rep : replies) {
 				try {
-					Post p = postRepository.findByPostID(rep.getParentPostID()).orElseThrow();
+					Post p = (Post) Hibernate.unproxy(postRepository.findByPostID(rep.getParentPostID()).orElseThrow());
 					p.setInteractionType("Liked");
 					if (recentInteractions.contains(p)) {
 						p.setInteractionType("Liked and Replied");
@@ -90,7 +91,7 @@ public class PostInteractionService {
 		if (savedPosts.size() > 0) {
 			for (SavedPost sp : savedPosts) {
 				try {
-					Post p = sp.getPost();
+					Post p = (Post) Hibernate.unproxy(sp.getPost());
 					Post checkPost = p;
 					checkPost.setInteractionType("Liked");
 					if (recentInteractions.contains(checkPost)) {
